@@ -1,57 +1,91 @@
-import { useState } from "react"
-import Button from "../UI/Button"
-import Card from "../UI/Card"
-
+import { useState } from "react";
+import Button from "../UI/Button";
+import Card from "../UI/Card";
+import ErrorModal from "../UI/ErrorModal";
 
 const AddWorker = (props) => {
-    const [enteredWorkerName, setEnteredWorkerName] = useState("");
-    const [enteredWage, setEnteredWage] = useState("");
+  const [enteredWorkerName, setEnteredWorkerName] = useState("");
+  const [enteredWage, setEnteredWage] = useState("");
+  const [error, setError] = useState();
 
-    const minimumWage = 5000;
+  const minimumWage = 5000;
 
-    const addWorkerHandler = (e) =>{
+  const addWorkerHandler = (e) => {
     e.preventDefault();
-    if(enteredWorkerName.trim().length === 0 || enteredWage.trim().length === 0){
-        return;
+    if (enteredWorkerName.trim().length === 0) {
+      setError({
+        title: "Name is Required!",
+        message: "Please enter a name",
+      });
+
+      return;
     }
 
-    if(+enteredWage<minimumWage){
-        //yukarıda useState'de enteredWage string olarak vermiştik. Number olması için başına + koyduk.
-        return;
+    if (+enteredWage < minimumWage) {
+      //yukarıda useState'de enteredWage string olarak vermiştik. Number olması için başına + koyduk.
+      setError({
+        title: "Wage is required!",
+        message: `Please enter a wage value greater than ${minimumWage}`,
+      });
+      return;
     }
-    
 
-    // setEnteredWorkerName("")  ve setEnteredWage("") bunları yazınca 
+    // setEnteredWorkerName("")  ve setEnteredWage("") bunları yazınca
     // butona bastıktan sonra inputların içi sıfırlanıyor!!!
 
     props.setWorkers((prevState) => [
-        {
-        id: Math.floor(Math.random()*1000),
+      {
+        id: Math.floor(Math.random() * 1000),
         name: enteredWorkerName,
         wage: enteredWage,
-         },
-    ...prevState,
+      },
+      ...prevState,
     ]);
     setEnteredWorkerName("");
     setEnteredWage("");
-    };
+  };
 
-return (
+  const errorHandler = () => {
+    setError(null);
+  };
 
-        //! bu projede tim css classları için tailwind kullanıldı
-<Card className="mt-10">
-<form className="flex flex-col gap-y-2" onSubmit={addWorkerHandler}>
-            <label htmlFor="name" className="font-medium">Çalışan İsmi</label>
-            <input type="text" className="max-w-[40rem] w-full mx-auto border p-2" placeholder="Çalışan İsmi Giriniz" 
-            id="name" onChange={(e) => setEnteredWorkerName(e.target.value)} value={enteredWorkerName}/>
-            <label htmlFor="wage" className="font-medium" >Maaş Miktarı</label>
-            <input type="number" className="max-w-[40rem] w-full mx-auto border p-2" placeholder="Maaş Giriniz" 
-            id="wage" onChange={(e)=> setEnteredWage(e.target.value)} value={enteredWage}/>
-            <Button className="mt-2" type="submit">Ekle</Button>
+  return (
+    //! bu projede tim css classları için tailwind kullanıldı
+    <div>
+      {error && <ErrorModal onConfirm={errorHandler} error={error} />}
+      {/* Eğer error true ise ErrorModal'ı çağır demek */}
+
+      <Card className="mt-10">
+        <form className="flex flex-col gap-y-2" onSubmit={addWorkerHandler}>
+          <label htmlFor="name" className="font-medium">
+            Worker Name
+          </label>
+          <input
+            type="text"
+            className="max-w-[40rem] w-full mx-auto border p-2"
+            placeholder="Enter Worker Name"
+            id="name"
+            onChange={(e) => setEnteredWorkerName(e.target.value)}
+            value={enteredWorkerName}
+          />
+          <label htmlFor="wage" className="font-medium">
+            Wage Amount
+          </label>
+          <input
+            type="number"
+            className="max-w-[40rem] w-full mx-auto border p-2"
+            placeholder="Enter Wage Amount"
+            id="wage"
+            onChange={(e) => setEnteredWage(e.target.value)}
+            value={enteredWage}
+          />
+          <Button className="mt-2 rounded" type="submit">
+            Add
+          </Button>
         </form>
-</Card>
-     
-    )
-}
+      </Card>
+    </div>
+  );
+};
 
-export default AddWorker
+export default AddWorker;
