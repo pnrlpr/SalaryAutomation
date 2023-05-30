@@ -25,11 +25,11 @@ const AddWorker = (props) => {
     // butona bastıktan sonra inputların içi sıfırlanıyor!!!
 
     props.setWorkers((prevState) => [
-    {
+        {
         id: Math.floor(Math.random()*1000),
-        name: setEnteredWorkerName,
-        wage: setEnteredWage,
-    },
+        name: enteredWorkerName,
+        wage: enteredWage,
+         },
     ...prevState,
     ]);
     setEnteredWorkerName("");
