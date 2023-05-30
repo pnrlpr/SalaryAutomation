@@ -38,7 +38,7 @@ const AddWorker = (props) => {
 
 return (
 
-        //! bu projede tim css classları için tailwind kullanıldı
+        //! bu projede tüm css classları için tailwind kullanıldı
 <Card className="mt-10">
 <form className="flex flex-col gap-y-2" onSubmit={addWorkerHandler}>
             <label htmlFor="name" className="font-medium">Çalışan İsmi</label>
